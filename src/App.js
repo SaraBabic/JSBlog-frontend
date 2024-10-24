@@ -1,25 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useEffect, useState} from 'react'
+import Moment from 'moment';
 
 function App() {
+
+  const [backendData, setBackendData] = useState([{}])
+
+  useEffect(()=> {
+    fetch("/api").then(
+      response => response.json()
+    ).then(
+      data => {
+        setBackendData(data)
+      }
+    )
+  }, [])
+
+  Moment.locale('en');
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+
+      {(typeof backendData === "undefined") ? (
+        <p>Loading ... </p>
+      ): (
+        backendData.map((article, i) => (
+
+
+          <div className="card mt-4" key={i}>
+                  <div className="card-body">
+                    <h4 className="card-title">{article.title}</h4>
+                    <div className="card-subtitle text-muted mb-2">
+                      {Moment(article?.createdAt)?.format('d MMM Y')}
+                    </div>
+                    <div className="card-text mb-2">{ article.description }</div>
+                    <a href="articles/<%= article.slug %>" className="btn btn-primary">Read More</a>
+                    <a href="articles/edit/<%= article.id %>" className="btn btn-info">Edit</a>
+                    <form action="/articles/<%= article.id %>?_method=DELETE" method="POST" className="d-inline">
+                      <button type="submit" className="btn btn-danger">Delete</button>
+                    </form>
+                  </div>
+                </div>
+
+
+
+
+        ))
+      )}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
