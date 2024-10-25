@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import Moment from 'moment';
+import Navbar from './components/Navbar';
 
 function App() {
 
@@ -19,7 +20,7 @@ function App() {
 
   return (
     <div>
-
+      <Navbar />
       {(typeof backendData === "undefined") ? (
         <p>Loading ... </p>
       ): (
