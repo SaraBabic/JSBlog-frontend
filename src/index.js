@@ -9,6 +9,8 @@ import App from './App';
 import 'bootstrap/dist/css/bootstrap.css';
 import reportWebVitals from './reportWebVitals';
 import BlogPage from './pages/BlogPage';
+import BlogSinglePage from './pages/BlogSinglePage';
+import BlogEditPage from './pages/BlogEditPage';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +20,14 @@ const router = createBrowserRouter([
   {
     path: "blog",
     element: <BlogPage />,
+  },
+  {
+    path: "blog/:slug",
+    element: <BlogSinglePage />,
+  },
+  {
+    path: "blog/edit/:_id",
+    element: <BlogEditPage />,
   },
 ]);
 
