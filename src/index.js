@@ -11,6 +11,7 @@ import reportWebVitals from './reportWebVitals';
 import BlogPage from './pages/BlogPage';
 import BlogSinglePage from './pages/BlogSinglePage';
 import BlogEditPage from './pages/BlogEditPage';
+import BlogNewPage from './pages/BlogNewPage';
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: "blog/:slug",
     element: <BlogSinglePage />,
+  },
+  {
+    path: "blog/new",
+    element: <BlogNewPage />,
   },
   {
     path: "blog/edit/:_id",
