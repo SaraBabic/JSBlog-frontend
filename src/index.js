@@ -12,11 +12,21 @@ import BlogPage from './pages/BlogPage';
 import BlogSinglePage from './pages/BlogSinglePage';
 import BlogEditPage from './pages/BlogEditPage';
 import BlogNewPage from './pages/BlogNewPage';
+import SignUp from './pages/SignUp';
+import LogIn from './pages/LogIn';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+  },
+  {
+    path: "/register",
+    element: <SignUp />,
+  },
+  {
+    path: "/login",
+    element: <LogIn />,
   },
   {
     path: "blog",
