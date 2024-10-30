@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Moment from "moment";
 import MainLayout from "../layout/MainLayout";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 function BlogPage() {
+  const { isLoggedIn } = useContext(AuthContext);
   const [backendData, setBackendData] = useState([]);
 
   useEffect(() => {
@@ -15,7 +17,9 @@ function BlogPage() {
   }, []);
 
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this article?");
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this article?"
+    );
     if (!confirmDelete) return;
 
     try {
@@ -24,7 +28,9 @@ function BlogPage() {
       });
 
       if (response.ok) {
-        setBackendData((prevData) => prevData.filter((article) => article._id !== id));
+        setBackendData((prevData) =>
+          prevData.filter((article) => article._id !== id)
+        );
       } else {
         console.error("Failed to delete article");
       }
@@ -52,18 +58,22 @@ function BlogPage() {
                 {Moment(article?.createdAt)?.format("D MMM Y")}
               </div>
               <div className="card-text mb-2">{article.description}</div>
-              <Link to={`${article.slug}`} className="btn btn-primary">
-                Read More
-              </Link>
-              <Link to={`edit/${article._id}`} className="btn btn-info">
-                Edit
-              </Link>
-              <button
-                onClick={() => handleDelete(article._id)}
-                className="btn btn-danger"
-              >
-                Delete
-              </button>
+              {isLoggedIn && (
+                <>
+                  <Link to={`${article.slug}`} className="btn btn-primary">
+                    Read More
+                  </Link>
+                  <Link to={`edit/${article._id}`} className="btn btn-info">
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(article._id)}
+                    className="btn btn-danger"
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
             </div>
           </div>
         ))

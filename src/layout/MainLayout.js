@@ -1,15 +1,16 @@
-import React from 'react'
-import Navbar from '../components/Navbar'
+import React from "react";
+import Navbar from "../components/Navbar";
+import { AuthProvider } from "../context/AuthContext";
 
-function MainLayout({children}) {
+function MainLayout({ children }) {
   return (
     <>
+      <AuthProvider>
         <Navbar />
-        <div className='container my-10'>
-            { children }
-        </div>
+        <div className="container my-10">{children}</div>
+      </AuthProvider>
     </>
-  )
+  );
 }
 
-export default MainLayout
+export default MainLayout;

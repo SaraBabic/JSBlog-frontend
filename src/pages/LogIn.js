@@ -13,17 +13,14 @@ function LogIn() {
     try {
       const response = await fetch('/api/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Login successful:', data);
-
-        navigate('/');
+        localStorage.setItem('token', data.token);
+        navigate('/'); // Redirect to homepage if user is Logged in.
       } else {
         const errorData = await response.json();
         setError(errorData.error || 'Failed to login');
