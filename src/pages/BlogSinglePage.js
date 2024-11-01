@@ -4,7 +4,7 @@ import Moment from 'moment';
 import MainLayout from '../layout/MainLayout';
 
 function BlogSinglePage() {
-  const { slug } = useParams(); // Dohvatanje slug parametra iz URL-a
+  const { slug } = useParams();
   const [article, setArticle] = useState(null);
 
   useEffect(() => {
@@ -27,6 +27,11 @@ function BlogSinglePage() {
             {Moment(article.createdAt).format('D MMM YYYY')}
           </p>
           <p>{article.markdown}</p>
+          {article.imagePath && (
+          <div className="form-group">
+            <img src={`/${article.imagePath}`} alt="Current Article" style={{ maxWidth: '200px', margin: '10px 0' }} />
+          </div>
+        )}
         </div>
       )}
     </MainLayout>

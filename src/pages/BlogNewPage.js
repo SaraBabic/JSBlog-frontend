@@ -7,26 +7,39 @@ function BlogNewPage() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    markdown: ''
+    markdown: '',
+    file: null,
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
+    });
+  };
+
+  const handleFileChange = (e) => {
+    setFormData({
+      ...formData,
+      file: e.target.files[0],
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
+    const formDataToSend = new FormData();
+    formDataToSend.append('title', formData.title);
+    formDataToSend.append('description', formData.description);
+    formDataToSend.append('markdown', formData.markdown);
+    
+    if (formData.file) {
+      formDataToSend.append('file', formData.file);
+    }
     fetch('/api/blogs', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
+      body: formDataToSend,
     })
       .then((response) => {
         if (response.ok) {
@@ -73,6 +86,16 @@ function BlogNewPage() {
             className="form-control"
             value={formData.markdown}
             onChange={handleChange}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="file">Image</label>
+          <input
+            type="file"
+            name="file"
+            id="file"
+            className="form-control-file"
+            onChange={handleFileChange}
           />
         </div>
         <button type="button" onClick={() => navigate('/blog')} className="btn btn-secondary">

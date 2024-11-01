@@ -44,25 +44,40 @@ function BlogPage() {
   return (
     <MainLayout>
       <h1 className="mb-4">Blog Articles</h1>
-      <Link to="/blog/new" className="btn btn-success">
-        New Article
-      </Link>
-      {typeof backendData === "undefined" ? (
+      {isLoggedIn && (
+        <>
+          <Link to="/blog/new" className="btn btn-success">
+            New Article
+          </Link>
+        </>
+      )}
+      {backendData.length === 0 ? (
         <p>Loading ... </p>
       ) : (
-        backendData.map((article, i) => (
-          <div className="card mt-4" key={i}>
+        backendData.map((article) => (
+          <div className="card mt-4" key={article._id}>
             <div className="card-body">
               <h4 className="card-title">{article.title}</h4>
               <div className="card-subtitle text-muted mb-2">
-                {Moment(article?.createdAt)?.format("D MMM Y")}
+                {Moment(article.createdAt).format("D MMM Y")}
               </div>
               <div className="card-text mb-2">{article.description}</div>
+
+              {/* Render the image if it exists */}
+              {article.imagePath && (
+                  <img
+                    src={`/${article.imagePath}`}
+                    alt={article.title}
+                    className="img-fluid mb-3"
+                    style={{ maxWidth: "100%", height: "auto" }}
+                  />
+                )}
+
+              <Link to={`${article.slug}`} className="btn btn-primary">
+                Read More
+              </Link>
               {isLoggedIn && (
                 <>
-                  <Link to={`${article.slug}`} className="btn btn-primary">
-                    Read More
-                  </Link>
                   <Link to={`edit/${article._id}`} className="btn btn-info">
                     Edit
                   </Link>

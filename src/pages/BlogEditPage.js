@@ -4,12 +4,13 @@ import MainLayout from '../layout/MainLayout';
 
 function BlogEditPage() {
   const { _id } = useParams();
-
   const navigate = useNavigate();
   const [article, setArticle] = useState({
     title: '',
     description: '',
-    markdown: ''
+    markdown: '',
+    file: null,
+    imagePath: '',
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,7 +22,10 @@ function BlogEditPage() {
         return response.json();
       })
       .then((data) => {
-        setArticle(data);
+        setArticle({
+          ...data,
+          imagePath: data.imagePath || '',
+        });
         setLoading(false);
       })
       .catch((error) => {
@@ -38,15 +42,27 @@ function BlogEditPage() {
     }));
   };
 
+  const handleFileChange = (e) => {
+    setArticle((prevArticle) => ({
+      ...prevArticle,
+      file: e.target.files[0],
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const formData = new FormData();
+    formData.append('title', article.title);
+    formData.append('description', article.description);
+    formData.append('markdown', article.markdown);
+    if (article.file) {
+      formData.append('file', article.file);
+    }
+
     fetch(`/api/edit/${_id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(article),
+      body: formData,
     })
       .then((response) => {
         if (response.ok) {
@@ -98,6 +114,24 @@ function BlogEditPage() {
             className="form-control"
           />
         </div>
+        <div className="form-group">
+          <label htmlFor="file">Image</label>
+          <input
+            type="file"
+            name="file"
+            onChange={handleFileChange}
+            className="form-control-file"
+          />
+        </div>
+
+        {/* Display the current image if it exists */}
+        {article.imagePath && (
+          <div className="form-group">
+            <label>Current Image</label>
+            <img src={`/${article.imagePath}`} alt="Current Article" style={{ maxWidth: '200px', margin: '10px 0' }} />
+          </div>
+        )}
+
         <Link to="/blog" className="btn btn-secondary">
           Cancel
         </Link>
