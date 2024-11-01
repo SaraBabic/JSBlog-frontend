@@ -14,34 +14,41 @@ function Navbar() {
   };
 
   return (
-    <div className="bg-gray-100 shadow-md sticky top-0 z-40">
-      <div className="container flex items-center py-4 px-6 justify-between">
-        <div>
+    <div className=" bg-white shadow-md sticky top-0 z-40">
+        <span className=" block w-full bg-nodeGreen h-2"></span>
+      <div className="container flex items-center py-2 px-6 justify-between">
+        <div className="flex gap-4 items-center">
           <Link to="/">
-            <img src="/images/icons/coding.png" className="w-10" alt="logo" />
+            <img src="/images/icons/logo2.svg" className="w-20" alt="logo" />
           </Link>
         </div>
         <ul className="flex gap-4 m-0">
           <Link
             to="/"
-            className=" text-white bg-black rounded-full px-3 py-1 no-underline"
+            className="bg-jsYellow text-black font-bold px-3 py-1 no-underline relative hover:after:block hover:after:bg-nodeGreen hover:after:h-1 hover:after:w-full hover:after:absolute hover:after:left-0 hover:after:bottom-0"
           >
-            Home Page
+            Home
           </Link>
           <Link
             to="/blog"
-            className=" text-white bg-black rounded-full px-3 py-1 no-underline"
+            className="bg-jsYellow text-black font-bold px-3 py-1 no-underline relative hover:after:block hover:after:bg-nodeGreen hover:after:h-1 hover:after:w-full hover:after:absolute hover:after:left-0 hover:after:bottom-0"
           >
             Blog
           </Link>
           {isLoggedIn && (
             <Link
               onClick={handleLogout}
-              className="text-white bg-black rounded-full px-3 py-1 no-underline"
+              className="bg-jsYellow text-black font-bold px-3 py-1 no-underline relative hover:after:block hover:after:bg-nodeGreen hover:after:h-1 hover:after:w-full hover:after:absolute hover:after:left-0 hover:after:bottom-0"
             >
               Logout
             </Link>
           )}
+          <Link
+            to="/"
+            className="bg-jsYellow text-black font-bold px-3 py-1 no-underline relative hover:after:block hover:after:bg-nodeGreen hover:after:h-1 hover:after:w-full hover:after:absolute hover:after:left-0 hover:after:bottom-0"
+          >
+            Contact
+          </Link>
         </ul>
       </div>
     </div>

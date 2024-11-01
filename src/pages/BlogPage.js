@@ -55,25 +55,29 @@ function BlogPage() {
         <p>Loading ... </p>
       ) : (
         backendData.map((article) => (
-          <div className="card mt-4" key={article._id}>
-            <div className="card-body">
-              <h4 className="card-title">{article.title}</h4>
-              <div className="card-subtitle text-muted mb-2">
+          <div className="p-4 border-2 border-nodeGreen my-4" key={article._id}>
+            <div className="flex mb-4">
+              <div className="flex-1">
+              <div className=" opacity-70">
                 {Moment(article.createdAt).format("D MMM Y")}
               </div>
-              <div className="card-text mb-2">{article.description}</div>
+              <h4 className="">{article.title}</h4>
+              <div className="">{article.description}</div>
+              </div>
 
               {/* Render the image if it exists */}
               {article.imagePath && (
+                <div className="flex-1 flex justify-end h-full">
                   <img
                     src={`/${article.imagePath}`}
                     alt={article.title}
-                    className="img-fluid mb-3"
+                    className=" object-cover h-full max-h-20"
                     style={{ maxWidth: "100%", height: "auto" }}
                   />
+                  </div>
                 )}
-
-              <Link to={`${article.slug}`} className="btn btn-primary">
+              </div>
+              <Link to={`${article.slug}`} className="bg-nodeGreen text-black no-underline py-2 px-4 font-bold relative hover:after:block hover:after:bg-jsYellow hover:after:h-1 hover:after:w-full hover:after:absolute hover:after:left-0 c">
                 Read More
               </Link>
               {isLoggedIn && (
@@ -89,7 +93,7 @@ function BlogPage() {
                   </button>
                 </>
               )}
-            </div>
+            
           </div>
         ))
       )}
