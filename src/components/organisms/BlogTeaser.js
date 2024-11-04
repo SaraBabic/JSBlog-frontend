@@ -1,54 +1,54 @@
-import React, { useContext } from 'react'
+import React, { useContext } from "react";
 import Moment from "moment";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import Button from '../atoms/Button';
+import Button from "../atoms/Button";
 
-function BlogTeaser( {article, onDelete} ) {
-
-    const { isLoggedIn } = useContext(AuthContext);
-    Moment.locale("en");
+function BlogTeaser({ article, onDelete }) {
+  const { isLoggedIn } = useContext(AuthContext);
+  Moment.locale("en");
 
   return (
-    <div className="p-4 border-2 border-nodeGreen my-4" key={article._id}>
-            <div className="flex mb-4">
-              <div className="flex-1">
-              <div className=" opacity-70">
-                {Moment(article.createdAt).format("D MMM Y")}
-              </div>
-              <h4 className="">{article.title}</h4>
-              <div className="">{article.description}</div>
-              </div>
-
-              {/* Render the image if it exists */}
-              {article.imagePath && (
-                <div className="flex-1 flex justify-end h-full">
-                  <img
-                    src={`/${article.imagePath}`}
-                    alt={article.title}
-                    className=" object-cover h-full max-h-20"
-                    style={{ maxWidth: "100%", height: "auto" }}
-                  />
-                  </div>
-                )}
-              </div>
-              <Button path={`${article.slug}`} />
-              {isLoggedIn && (
-                <>
-                  <Link to={`edit/${article._id}`} className="btn btn-info">
-                    Edit
-                  </Link>
-                  <button
-                    onClick={() => onDelete(article._id)}
-                    className="btn btn-danger"
-                  >
-                    Delete
-                  </button>
-                </>
-              )}
-            
+    <div className="p-4 shadow-xl  my-20" key={article._id}>
+      <div className="flex mb-4 gap-4 md:gap-20 flex-col-reverse md:flex-row">
+        <div className="flex flex-col justify-between md:w-2/3">
+        <div className="">
+        <div className=" opacity-70">
+            {Moment(article.createdAt).format("D MMM Y")}
           </div>
-  )
+          <h4 className="">{article.title}</h4>
+          <div className="">{article.description}</div>
+        </div>
+          
+          <Button path={`${article.slug}`} />
+        </div>
+
+        {/* Render the image if it exists */}
+        {article.imagePath && (
+          <div className=" md:w-1/3 flex">
+            <img
+              src={`/${article.imagePath}`}
+              alt={article.title}
+              className=" object-cover aspect-video md:aspect-square"
+            />
+          </div>
+        )}
+      </div>
+      {isLoggedIn && (
+        <>
+          <Link to={`edit/${article._id}`} className="btn btn-info">
+            Edit
+          </Link>
+          <button
+            onClick={() => onDelete(article._id)}
+            className="btn btn-danger"
+          >
+            Delete
+          </button>
+        </>
+      )}
+    </div>
+  );
 }
 
-export default BlogTeaser
+export default BlogTeaser;

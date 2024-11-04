@@ -15,9 +15,8 @@ function Navbar() {
   };
 
   return (
-    <div className=" bg-white shadow-md sticky top-0 z-40">
-        <span className=" block w-full bg-nodeGreen h-2"></span>
-      <div className="container flex items-center py-2 px-6 justify-between">
+    <div className=" sticky top-0 z-40 bg-bgGray shadow-md">
+      <div className="container flex items-center py-4 px-6 justify-between">
         <Logo />
         <ul className="flex gap-4 m-0">
           <NavLink path="/" linkText="Home" />
