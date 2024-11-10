@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
-import MainLayout from '../layout/MainLayout';
+import React, { useEffect, useState } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import MainLayout from "../layout/MainLayout";
 
 function BlogEditPage() {
   const { _id } = useParams();
   const navigate = useNavigate();
   const [article, setArticle] = useState({
-    title: '',
-    description: '',
-    markdown: '',
+    title: "",
+    description: "",
+    markdown: "",
     file: null,
-    imagePath: '',
+    imagePath: "",
+    section: []
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -18,13 +19,13 @@ function BlogEditPage() {
   useEffect(() => {
     fetch(`/api/edit/${_id}`)
       .then((response) => {
-        if (!response.ok) throw new Error('Failed to load article');
+        if (!response.ok) throw new Error("Failed to load article");
         return response.json();
       })
       .then((data) => {
         setArticle({
           ...data,
-          imagePath: data.imagePath || '',
+          imagePath: data.imagePath || "",
         });
         setLoading(false);
       })
@@ -53,29 +54,30 @@ function BlogEditPage() {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('title', article.title);
-    formData.append('description', article.description);
-    formData.append('markdown', article.markdown);
+    formData.append("title", article.title);
+    formData.append("description", article.description);
+    formData.append("markdown", article.markdown);
     if (article.file) {
-      formData.append('file', article.file);
+      formData.append("file", article.file);
     }
 
     fetch(`/api/edit/${_id}`, {
-      method: 'PUT',
+      method: "PUT",
       body: formData,
     })
       .then((response) => {
         if (response.ok) {
-          navigate('/blog');
+          navigate("/blog");
         } else {
-          console.error('Failed to update article');
+          console.error("Failed to update article");
         }
       })
-      .catch((error) => console.error('Error:', error));
+      .catch((error) => console.error("Error:", error));
   };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
+  console.log("artii ::: ", article);
 
   return (
     <MainLayout>
@@ -128,8 +130,63 @@ function BlogEditPage() {
         {article.imagePath && (
           <div className="form-group">
             <label>Current Image</label>
-            <img src={`/${article.imagePath}`} alt="Current Article" style={{ maxWidth: '200px', margin: '10px 0' }} />
+            <img
+              src={`/${article.imagePath}`}
+              alt="Current Article"
+              style={{ maxWidth: "200px", margin: "10px 0" }}
+            />
           </div>
+        )}
+
+        {article?.sections?.length <= 0 ? (
+          <p>Loading ... </p>
+        ) : (
+          article?.sections?.map(function(section) {
+            if (section?.type === "text") {
+              return (
+                <>
+                <label htmlFor="title">Title</label>
+                <input
+                  required
+                  value={section.content}
+                  onChange={handleChange}
+                  type="text"
+                  name="title"
+                  id="title"
+                  className="form-control"
+                />
+              </>
+              )
+            } else if(section?.type === "image") {
+              return (
+                <>
+                <div className="form-group">
+                  <label htmlFor="file">Image</label>
+                  <input
+                    type="file"
+                    name="file"
+                    onChange={handleFileChange}
+                    className="form-control-file"
+                  />
+                </div>
+                {article.imagePath && (
+                  <div className="form-group">
+                    <label>Current Image</label>
+                    <img
+                      src={`/${section.imagePath}`}
+                      alt="Current Article"
+                      style={{ maxWidth: "200px", margin: "10px 0" }}
+                    />
+                  </div>
+                )}
+                </>
+              )
+            } else {
+              return {
+
+              }
+            }
+          })
         )}
 
         <Link to="/blog" className="btn btn-secondary">
