@@ -23,7 +23,7 @@ function BlogSinglePage() {
         <>
           <div className="container mt-4">
             <h1>{article.title}</h1>
-            <p className="text-muted">
+            <p className="">
               {Moment(article.createdAt).format("D MMM YYYY")}
             </p>
             <p>{article.markdown}</p>

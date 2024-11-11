@@ -13,7 +13,7 @@ function BlogTeaser({ article, onDelete }) {
       <div className="flex mb-4 gap-4 md:gap-20 flex-col-reverse md:flex-row">
         <div className="flex flex-col justify-between md:w-2/3">
         <div className="">
-        <div className=" opacity-70">
+        <div className=" text-white">
             {Moment(article.createdAt).format("D MMM Y")}
           </div>
           <h4 className="">{article.title}</h4>

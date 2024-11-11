@@ -9,7 +9,8 @@ function BlogNewPage() {
     description: '',
     markdown: '',
     file: null,
-    sections: [], // Dodajemo sekcije kao niz
+    imagePath: "",
+    sections: [],
   });
 
   const handleChange = (e) => {
@@ -27,50 +28,54 @@ function BlogNewPage() {
     });
   };
 
-  // Funkcija za dodavanje nove sekcije
   const handleAddSection = (type) => {
     setFormData((prevState) => ({
       ...prevState,
       sections: [
         ...prevState.sections,
-        { type, content: '', order: prevState.sections.length + 1 }, // nova sekcija sa tipom i praznim sadržajem
+        { type, content: '', order: prevState.sections.length + 1 },
       ],
     }));
   };
 
-  // Funkcija za promenu sadržaja sekcije
   const handleSectionChange = (index, value) => {
     const updatedSections = [...formData.sections];
-    updatedSections[index].content = value;
+    if (updatedSections[index].type === 'image') {
+      updatedSections[index].content = value.target.files[0];
+    } else {
+      updatedSections[index].content = value.target.value;
+    }
     setFormData({ ...formData, sections: updatedSections });
   };
+  
 
-  // Uklanjanje sekcije
   const handleRemoveSection = (index) => {
     const updatedSections = formData.sections.filter((_, i) => i !== index);
     setFormData({ ...formData, sections: updatedSections });
   };
 
-  // Podnošenje forme
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     const formDataToSend = new FormData();
     formDataToSend.append('title', formData.title);
     formDataToSend.append('description', formData.description);
     formDataToSend.append('markdown', formData.markdown);
-
+  
     if (formData.file) {
       formDataToSend.append('file', formData.file);
     }
-
-    // Dodajemo sekcije u formData
+  
     formData.sections.forEach((section, index) => {
       formDataToSend.append(`sections[${index}][type]`, section.type);
-      formDataToSend.append(`sections[${index}][content]`, section.content);
+      if (section.type === 'image' && section.content instanceof File) {
+        formDataToSend.append(`sections`, section.content);
+      } else {
+        formDataToSend.append(`sections[${index}][content]`, section.content);
+      }
       formDataToSend.append(`sections[${index}][order]`, section.order);
     });
-
+  
     fetch('/api/blogs', {
       method: 'POST',
       body: formDataToSend,
@@ -84,6 +89,7 @@ function BlogNewPage() {
       })
       .catch((error) => console.error('Error:', error));
   };
+  
 
   return (
     <MainLayout>
@@ -126,8 +132,8 @@ function BlogNewPage() {
           <label htmlFor="file">Main Image</label>
           <input
             type="file"
-            name="file"
-            id="file"
+            name="imagePath"
+            id="imagePath"
             className="form-control-file"
             onChange={handleFileChange}
           />
@@ -137,28 +143,29 @@ function BlogNewPage() {
         <h3>Sections</h3>
         {formData.sections.map((section, index) => (
           <div key={index} className="section">
-            <label>Section {index + 1}</label>
-            {section.type === 'text' ? (
-              <textarea
-                className="form-control"
-                value={section.content}
-                onChange={(e) => handleSectionChange(index, e.target.value)}
-              />
-            ) : (
-              <input
-                type="file"
-                className="form-control-file"
-                onChange={(e) => handleSectionChange(index, e.target.files[0])}
-              />
-            )}
-            <button
-              type="button"
-              onClick={() => handleRemoveSection(index)}
-              className="btn btn-danger mt-2"
-            >
-              Remove Section
-            </button>
-          </div>
+          <label>Section {index + 1}</label>
+          {section.type === 'text' ? (
+            <textarea
+              className="form-control"
+              value={section.content}
+              onChange={(e) => handleSectionChange(index, e)}
+            />
+          ) : (
+            <input
+              type="file"
+              className="form-control-file"
+              onChange={(e) => handleSectionChange(index, e)}
+            />
+          )}
+          <button
+            type="button"
+            onClick={() => handleRemoveSection(index)}
+            className="btn btn-danger mt-2"
+          >
+            Remove Section
+          </button>
+        </div>
+        
         ))}
 
         <button type="button" onClick={() => handleAddSection('text')} className="btn btn-secondary mt-3">
