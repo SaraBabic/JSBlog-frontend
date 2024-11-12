@@ -68,12 +68,14 @@ function BlogNewPage() {
   
     formData.sections.forEach((section, index) => {
       formDataToSend.append(`sections[${index}][type]`, section.type);
-      if (section.type === 'image' && section.content instanceof File) {
-        formDataToSend.append(`sections`, section.content);
-      } else {
-        formDataToSend.append(`sections[${index}][content]`, section.content);
-      }
       formDataToSend.append(`sections[${index}][order]`, section.order);
+      if (section.type === 'image' && section.content instanceof File) {
+        formDataToSend.append(`sections[${index}][content]`, section.content);
+      } else if (section.type === 'text' && section.content.trim() !== '') {
+        formDataToSend.append(`sections[${index}][content]`, section.content);
+      } else {
+        console.warn(`Skipping empty section at index ${index}`);
+      }
     });
   
     fetch('/api/blogs', {
@@ -139,7 +141,6 @@ function BlogNewPage() {
           />
         </div>
 
-        {/* Sekcije */}
         <h3>Sections</h3>
         {formData.sections.map((section, index) => (
           <div key={index} className="section">
