@@ -11,10 +11,35 @@ function BlogEditPage() {
     markdown: "",
     file: null,
     imagePath: "",
-    section: []
+    section: [],
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const handleAddSection = (type) => {
+    setArticle((prevState) => ({
+      ...prevState,
+      sections: [
+        ...prevState.sections,
+        { type, content: "", order: prevState.sections.length + 1 },
+      ],
+    }));
+  };
+
+  const handleSectionChange = (index, value) => {
+    const updatedSections = [...article.sections];
+    if (updatedSections[index].type === "image") {
+      updatedSections[index].content = value.target.files[0];
+    } else {
+      updatedSections[index].content = value.target.value;
+    }
+    setArticle({ ...article, sections: updatedSections });
+  };
+
+  const handleRemoveSection = (index) => {
+    const updatedSections = article.sections.filter((_, i) => i !== index);
+    setArticle({ ...article, sections: updatedSections });
+  };
 
   useEffect(() => {
     fetch(`/api/edit/${_id}`)
@@ -77,7 +102,6 @@ function BlogEditPage() {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
-  console.log("artii ::: ", article);
 
   return (
     <MainLayout>
@@ -141,51 +165,68 @@ function BlogEditPage() {
         {article?.sections?.length <= 0 ? (
           <p>Loading ... </p>
         ) : (
-          article?.sections?.map(function(section) {
-            if (section?.type === "text") {
+          article?.sections?.map(function (section) {
+            console.log('section :: ', section)
+              
               return (
                 <>
-                <label htmlFor="title">Title</label>
-                <input
-                  required
-                  value={section.content}
-                  onChange={handleChange}
-                  type="text"
-                  name="title"
-                  id="title"
-                  className="form-control"
-                />
-              </>
-              )
-            } else if(section?.type === "image") {
-              return (
-                <>
-                <div className="form-group">
-                  <label htmlFor="file">Image</label>
-                  <input
-                    type="file"
-                    name="file"
-                    onChange={handleFileChange}
-                    className="form-control-file"
-                  />
-                </div>
-                {article.imagePath && (
-                  <div className="form-group">
-                    <label>Current Image</label>
-                    <img
-                      src={`/${section.imagePath}`}
-                      alt="Current Article"
-                      style={{ maxWidth: "200px", margin: "10px 0" }}
-                    />
-                  </div>
-                )}
-                </>
-              )
-            } else {
-              return {
+                  <h1>More sections:</h1>
+                  {article.sections.map((section, index) => (
+                    <div key={index} className="section">
+                      <label>Section {index + 1}</label>
+                      {section.type === "text" ? (
+                        <textarea
+                          className="form-control"
+                          value={section.content}
+                          onChange={(e) => handleSectionChange(index, e)}
+                        />
+                      ) : (
+                        <>
+                        <input
+                          type="file"
+                          className="form-control-file"
+                          onChange={(e) => handleSectionChange(index, e)}
+                        />
+                        {section?.content && (
+                          <div className="form-group">
+                            <label>Current Image</label>
+                            <img
+                              src={`/${section.content}`}
+                              alt="Current Article"
+                              style={{ maxWidth: "200px", margin: "10px 0" }}
+                            />
+                          </div>
+                        )}
+                        </>
+                        
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveSection(index)}
+                        className="btn btn-danger mt-2"
+                      >
+                        Remove Section
+                      </button>
+                    </div>
+                  ))}
 
-              }
-            }
+                  <button
+                    type="button"
+                    onClick={() => handleAddSection("text")}
+                    className="btn btn-secondary mt-3"
+                  >
+                    Add Text Section
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleAddSection("image")}
+                    className="btn btn-secondary mt-3"
+                  >
+                    Add Image Section
+                  </button>
+                </>
+              );
+            
           })
         )}
 
