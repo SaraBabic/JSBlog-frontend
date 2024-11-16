@@ -102,7 +102,7 @@ function BlogEditPage() {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
-
+  console.log("article", article);
   return (
     <MainLayout>
       <h1>Edit Blog</h1>
@@ -165,71 +165,66 @@ function BlogEditPage() {
         {article?.sections?.length <= 0 ? (
           <p>Loading ... </p>
         ) : (
-          article?.sections?.map(function (section) {
-            console.log('section :: ', section)
-              
-              return (
-                <>
-                  <h1>More sections:</h1>
-                  {article.sections.map((section, index) => (
-                    <div key={index} className="section">
-                      <label>Section {index + 1}</label>
-                      {section.type === "text" ? (
-                        <textarea
-                          className="form-control"
-                          value={section.content}
-                          onChange={(e) => handleSectionChange(index, e)}
-                        />
-                      ) : (
-                        <>
-                        <input
-                          type="file"
-                          className="form-control-file"
-                          onChange={(e) => handleSectionChange(index, e)}
-                        />
-                        {section?.content && (
-                          <div className="form-group">
-                            <label>Current Image</label>
-                            <img
-                              src={`/${section.content}`}
-                              alt="Current Article"
-                              style={{ maxWidth: "200px", margin: "10px 0" }}
-                            />
-                          </div>
-                        )}
-                        </>
-                        
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveSection(index)}
-                        className="btn btn-danger mt-2"
-                      >
-                        Remove Section
-                      </button>
-                    </div>
-                  ))}
+          article?.sections?.map(function (section, index) {
+            console.log("section :: ", section);
 
+            return (
+              <>
+                <div key={index} className="section">
+                  <label>Section {index + 1}</label>
+                  {section.type === "text" ? (
+                    <textarea
+                      className="form-control"
+                      value={section.content}
+                      onChange={(e) => handleSectionChange(index, e)}
+                    />
+                  ) : (
+                    <>
+                      <input
+                        type="file"
+                        className="form-control-file"
+                        onChange={(e) => handleSectionChange(index, e)}
+                      />
+                      {section?.content && (
+                        <div className="form-group">
+                          <label>Current Image</label>
+                          <img
+                            src={`/${section.content}`}
+                            alt="Current Article"
+                            style={{ maxWidth: "200px", margin: "10px 0" }}
+                          />
+                        </div>
+                      )}
+                    </>
+                  )}
                   <button
                     type="button"
-                    onClick={() => handleAddSection("text")}
-                    className="btn btn-secondary mt-3"
+                    onClick={() => handleRemoveSection(index)}
+                    className="btn btn-danger mt-2"
                   >
-                    Add Text Section
+                    Remove Section
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => handleAddSection("image")}
-                    className="btn btn-secondary mt-3"
-                  >
-                    Add Image Section
-                  </button>
-                </>
-              );
-            
+                </div>
+              </>
+            );
           })
         )}
-
+        <>
+          <button
+            type="button"
+            onClick={() => handleAddSection("text")}
+            className="btn btn-secondary mt-3"
+          >
+            Add Text Section
+          </button>
+          <button
+            type="button"
+            onClick={() => handleAddSection("image")}
+            className="btn btn-secondary mt-3"
+          >
+            Add Image Section
+          </button>
+        </>
         <Link to="/blog" className="btn btn-secondary">
           Cancel
         </Link>
